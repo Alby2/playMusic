@@ -1,12 +1,36 @@
+import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View,PermissionsAndroid } from 'react-native';
+import Navigations from './routes/Navigations';
+import React,{useEffect,useState} from 'react';
 
-export default function App() {
+const App = ()=> {
+
+  const [page, setPage] = useState(true)
+  const accordPermision = async() => {
+    try {
+      const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_MEDIA_LOCATION,{
+        title:"Acces aux medias",
+        message:"J'aimerais avoir access a tes medias ",
+        buttonPositive:"D'accord",
+        buttonNegative:"Non",
+        buttonNeutral:"Pas maintenant"
+      })
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+         console.log("Super");
+      }else if(granted === PermissionsAndroid.RESULTS.DENIED){
+          console.log("Echec");
+      }
+    } catch (error) {
+      console.log("Echec Total");
+    }
+  }
+  useEffect(accordPermision, [])
+  
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Navigations />
+    </NavigationContainer>
   );
 }
 
@@ -18,3 +42,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+export default App;
